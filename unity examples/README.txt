@@ -1,0 +1,192 @@
+John Welter - Unity Projects Collection
+----------------------------------------
+Version date: 9-20-2016
+----------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; --------------BACTORY-------------- ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+Build of an n-back game made for my 
+virtual reality class in Clemson University. 
+Won the "Best VR Demo" award (2015)
+
+
+CREDITS:
+	
+	John Welter
+	Chinmay Joshi
+	Raviteja Kandula
+
+	"Interlude" - Larry Owens
+	"Wii Shop Channel" - Nintendo
+	"Tiger Rag" - Clemson University
+
+	Rhythm Tool - HelloMeow
+	Kinect V2 with MS-SDK - RF solutions
+
+
+"The Backtory"
+
+Fall 2015 Semester project
+CPSC 419 (right...? I forgot)
+Dr. S. Babu
+
+John Welter
+Chinmay Joshi
+Ravi Kandula
+
+--------What is an N-back game?--------------------------
+
+an N-back game is an excercise in memorization. a series of signals
+is shown to the player. for each signal, the player must decide if it 
+matches with a signal they saw N signals ago
+
+for example, if N was 2, they would have to compare the current signal 
+to the signal they saw 2 back.
+
+let's say the first singal is red, the second is green, and the third is
+red again. the current signal, red, matches with the signal two back, also 
+red. if the next signal was green, it would also match with the signal 
+two back, green. a player must recognize and identify each match.
+
+to do this, a player must keep a running memory of the signals up to N before
+the current signal, pushing out signals from farther back, as such:
+
+step 1, a blue signal: blue
+step 2, a red signal:  blue, red
+step 3, a green signal:blue, red, green
+step 4, a blue signal: red, green, blue (dropping the initial blue)
+step 5, a blue signal: green, blue, blue(dropping the red)
+
+...and so on
+
+lets say step 6 is also blue: blue, blue, blue
+
+since the current signal matches the signal two back, the player signifies a match. 
+lets say then that step 7 and 8 show red and blue signals respectively. the new memory 
+holding would be: blue, red, blue
+
+again, the current signal matches the one n back and is signified by the player. 
+
+lets say step 9 is red: red, blue, red
+
+again, a match. any signal has the potential to be a match!
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+--------HOW TO PLAY---------------------------------------------------------------------
+
+controls:
+
+for all scenes:
+	
+	W- switch scenes
+
+setup scene:
+
+	Q- N++
+	A- N--
+	Z- dog paws
+	X- cat paws
+	C- easy mode
+	D- medium mode
+	E- hard mode
+	S- start
+
+story scene:
+	
+	P- auto skip
+
+game scene: 
+
+	F- left paw
+	G- right paw
+
+-----------------------------------------------------------------------------------
+--------SCENES---------------------------------------------------------------------
+
+STARTUP
+	
+	title screen.
+
+SETUP
+
+	a console with buttons to set up the game. default is medium level 2 back game with dog paws.
+
+STORY
+
+	timed cards that show the premise of the game. can be flipped through faster with P
+
+GAME
+
+	the game. started by pressing either button. each game can be reset after it's over.
+	can also be switched back to the setup scene with W
+------------------------------------------------------------------------------------
+--------SPECIAL RULES---------------------------------------------------------------
+
+SCORING
+
+	hit: succesful match is made
+	mis: a potential match was missed
+	err: a mismatch was made, or a bomb made it through the system 
+
+	if there is the combined total of errors and misses is 20, the game is over. 
+	(however, if your hits are greater at the time, there is a bug that still says you win.)
+
+
+BOMBS
+
+	our version of the n-back game inclues bombs. they must always be hit, 
+	or it will count as an error.
+
+2 BELT SYSTEM
+	
+	although there are two conveyer belts, they both contribute to the same signal string-
+	you don't have to memorize patters for each belt. 
+----------------------------------------
+----------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; -------------THERENECT------------- ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+Build of a program that simulates a theremin. 
+Uses unity's procedureal audio capabilities to
+generate wave forms, which can be given effects.
+
+
+CREDITS:
+	
+	John Welter
+
+	procedureal audio tutorial: http://www.develop-online.net/tools-and-tech/procedural-audio-with-unity/0117433
+
+MANUAL BUILD
+CONTROLS:
+
+  UP arrow- move a half step up in pitch
+  DOWN arrow- move a half step down in pitch
+  1 - Decrease Volume
+  2 - increase volume
+  
+  A, W, S, E, D, F, T, G, Y, H, U, J, K, O, I, P, :, ' - keys acting like a keyboard, starting on a C key. can be offset by halfsteps
+  
+Visualisation:
+
+   W E   T Y U   O P 
+  A S D F G H J K L ; '
+  
+  c d e f g a b c d e f
+  
+  MODULATION - a wave that causes a held pitch to occilate. can control the depth and the speed
+  LOWPASS - used to make the saw wave not sound like an eargrater. only allows lower frequency sounds to get through. the lower the value, 
+            the lesser the sound.
+  ECHO - echo delay time, echo amount, echo volume, original volume.
+  Chorus - Chorus effect. can control speed of chorus and depth
+  Waves - sets waves of main ocillator and modulator. Availible in Sin, saw, triangle, and square.
+  Pitch Shift - shifts the entire theremin range up a half step per value. 
+  keyboard shift - moves keyboard keys up and down availible range in half steps
+  Glide speed- time it takes to settle from changing notes. the higher, the faster the transition.
+
+	
