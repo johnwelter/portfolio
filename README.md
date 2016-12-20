@@ -1,5 +1,5 @@
 # DPA Coding Portfolio
-
+### John Welter ###
 Here is a brief description of the folders and files included:
 
 1. Java - a folder containing java code
@@ -17,4 +17,4 @@ Here is a brief description of the folders and files included:
   * therenect - folder with therenect game and a sample script
   * mechVR - folder with mechVR sample scripts 
   
-each folder will have it's own readme to give any further necessary documentation.
+certain folders will have instruction files as necessary.
