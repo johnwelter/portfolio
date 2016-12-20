@@ -1,47 +1,52 @@
 using UnityEngine;
 using System.Collections;
 
-//This is a basic controller. It gives a song to the analyzer and starts playing and analyzing it.
-//See DataController and the example scene for an example on how to get the data in a game.
+/*
+ *  BasicController
+ *  
+ *  modified version of the basic controller for the rhythm tool
+ * 
+ *  handles all functions that happen on the beat of the music, like the conveyer belts.
+ *  also handles resetting, starting, and finishing up the game.
+ * 
+ */
 public class BasicController : MonoBehaviour
 {	
 	/// <summary>
 	/// RhythmTool. 
 	/// </summary>
-	public RhythmTool rhythmTool;
+	public RhythmTool rhythmTool; //the rhythm tool of the game
 
-	public bool test = true;
+	public bool test = true;      //
 		
 	/// <summary>
 	/// AudioClip of a song.
 	/// </summary>
-	public AudioClip audioClip;
+	public AudioClip audioClip;  //the current song to play
 
-	public pass[] movers;
-	public AudioSource[] indicators;
-	public spawn[] spawners;
-	public spawn[] beltSpawners;
-	public int[] nbacktrack;
-	public int[] missReserve;
-
-	public GameObject[] leftovers;
+	public pass[] movers;        // the ball movers
+	public AudioSource[] indicators;    //the sound effects for success/fail etc.
+	public spawn[] spawners;        //ball spawners
+	public spawn[] beltSpawners;    //belt spawners
+	public int[] nbacktrack;        //nback list 
+	public int[] missReserve;       //reserve to find if any previous signals were missed
 
 
-	public int suc = 0;
-	public int mis = 0;
-	public int err = -1;
-	public bool forcestop = false;
-	public int backAmount;
+	public int suc = 0;             //successful matches
+	public int mis = 0;             //misses
+	public int err = -1;            //errors
+	public bool forcestop = false;  //boolean to see if game is over based on a bad score
+	public int backAmount;          //n of the nback
 
 	//public Vector3 next;
 
-	public int beats = 0;
-	public int steps;
-	public int lastFrame = 0;
+	public int beats = 0;           //amount of beats
+	public int steps;               //amount of signals that have passed
+	public int lastFrame = 0;       
 
-	public bool end = false;
+	public bool end = false;        //boolean for end of song
 	
-	private Frame[] low;
+	private Frame[] low;            
 	// Use this for initialization
 
 
@@ -51,58 +56,71 @@ public class BasicController : MonoBehaviour
 
 
 		//s = transform.Find("spawn").GetComponent<spawn> ();
-		backAmount = StartVar.nback;
-		print (backAmount);
+		backAmount = StartVar.nback;    //get nback amount from the global start values
+		print (backAmount);             
 		
-		rhythmTool=GetComponent<RhythmTool>();
+		rhythmTool=GetComponent<RhythmTool>(); //get the rhythm tool
 		
-		rhythmTool.NewSong(audioClip);
+		rhythmTool.NewSong(audioClip);          //set song for the rhythm tool to play
 		
-		low = rhythmTool.Low.Frames;
-		nbacktrack = new int[backAmount + 1];
-		missReserve = new int[backAmount - 1];
+		low = rhythmTool.Low.Frames;            
+		nbacktrack = new int[backAmount + 1];   //create nback list
+		missReserve = new int[backAmount - 1];  //create reserve list
         //GetComponent<reachscaler>().enabled = true;
         //Instantiate (startball, new Vector3 (((float)0.08), ((float)2.05), ((float)-0.23)), Quaternion.identity);
     }
 
+    /*/////////////////
+     *  
+     *  OnEndOfSong
+     * 
+     *  resets game if endofsong signal sent
+     *  also sets text of screen to show if the player won or lost  
+     * 
+     * 
+     */
 	void OnEndOfSong()
 	{
 
         //GetComponent<reachscaler>().enabled = false;
-        if (suc <= err || forcestop) {
+
+        if (suc <= err || forcestop) {      //if the player loses, play lose sound, set screen to "YOUR'E FIRED"
+
 			GameObject.Find ("effects").GetComponent<AudioSource>().clip = GameObject.Find ("effects").GetComponent<sounds>().sfx[2];
 			GameObject.Find ("effects").GetComponent<AudioSource>().Play();
 			GameObject.Find ("labels").GetComponent<TextMesh> ().text = "YOU'RE\nFIRED";
-		} else {
+
+		} else {                            //if the player wins, play win sound, set screen to "GOOD JOB"
+
 			GameObject.Find ("effects").GetComponent<AudioSource>().clip = GameObject.Find ("effects").GetComponent<sounds>().sfx[3];
 			GameObject.Find ("effects").GetComponent<AudioSource>().Play();
 			GameObject.Find ("labels").GetComponent<TextMesh> ().text = "GOOD\nJOB";
 		}
 
 		
-		nbacktrack = new int[backAmount + 1];
+		nbacktrack = new int[backAmount + 1];   //reset nback and reserve lists
 		missReserve = new int[backAmount - 1];
 		//Instantiate (startball, new Vector3 (((float)0.08), ((float)2.05), ((float)-0.23)), new Quaternion ());
-		rhythmTool.NewSong (audioClip);
-		beats = -1;
-		steps = 0;
+		rhythmTool.NewSong (audioClip);         //reset rhythm tool song
+		beats = -1;                             //reset all values
+		steps = 0;                          
 		lastFrame = 0;
 		suc = 0;
 		mis = 0;
 		err = 0;
 		forcestop = false;
 
-		foreach(spawn S in beltSpawners)
+		foreach(spawn S in beltSpawners)        //reactivate spawners
 		{
 			S.active = true;
 		}
 		
-		foreach(pass P in movers)
+		foreach(pass P in movers)               //reactivate movers
 		{
 			P.active = true;
 		}
 
-		GameButton.start = true;
+		GameButton.start = true;                //reset the game button to act as a start button
         //GetComponent<reachscaler>().enabled = true;
 
 
@@ -115,7 +133,7 @@ public class BasicController : MonoBehaviour
 		{
 			int nextBeat = rhythmTool.NextBeatIndex();
 
-			if(rhythmTool.CurrentFrame > nextBeat && rhythmTool.CurrentFrame > rhythmTool.TotalFrames/2 && !end)
+			if(rhythmTool.CurrentFrame > nextBeat && rhythmTool.CurrentFrame > rhythmTool.TotalFrames/2 && !end) //if we're on the last beat (that's looked at), prepare to finish 
 			{
 				GameObject.Find("success").GetComponent<TextMesh> ().text = "";
 				GameObject.Find ("misses").GetComponent<TextMesh> ().text = "";
@@ -124,31 +142,30 @@ public class BasicController : MonoBehaviour
 				GameObject.Find("labels").GetComponent<TextMesh>().text = "finish!\nplease\nwait...";
 				end = true;
 			}
-			if(rhythmTool.IsBeat(i, 0) == 1 || end)
+			if(rhythmTool.IsBeat(i, 0) == 1 || end) //if we're on a beat, head thorugh the process
 			{
 
-				if(beats%(StartVar.difficultylevel) == 0){
+				if(beats%(StartVar.difficultylevel) == 0){ // if we're on a beat on which something happens (aka every other beat), make that something happen.
 
 
-					//chance of bomb 
-					int isBomb = Random.Range (0, 5);
+					//chance of bomb (1/5)
+					int isBomb = Random.Range (0, 5);   
 
 
 					//randomly choose the ID of which ball will spawn
-					int pickBall = Random.Range (0, 31);
+					int pickBall = Random.Range (0, 31); //gives every ball a 1/3 chance
 					pickBall = pickBall % (3);
 
 					//add oldest ID to reserve, add newest ID in it's place
 					missReserve[steps%(backAmount-1)] = nbacktrack[steps%(backAmount+1)]; 
 					nbacktrack[steps%(backAmount+1)] = pickBall+1;
 
-					if(isBomb == 3)
+					if(isBomb == 3) //if we're spawning a bomb, 
 					{
-						pickBall += 3; 
-					}
+						pickBall += 3; //add to the pickball to shift the index over to the bombs
 
-					//randomly choose which spawner creates the ball
-					int pickSpawner = Random.Range (0, 101);
+					//randomly choose which spawner creates the ball (50/50) chance
+					int pickSpawner = Random.Range (0, 101);   
 					pickSpawner = pickSpawner % 2;
 
 					//spawn selected ball from selected spawner, play sound of which one was selected
@@ -170,9 +187,10 @@ public class BasicController : MonoBehaviour
 
 					//
 
-					steps++;
+					steps++;    //add to steps
 
-					string printOut = "(";
+                    //some debug to print out the current signal chart (what's current and what's reserved)
+					string printOut = "(";  
 
 					for(int j = 0; j < (backAmount+1); j++)
 					{
@@ -216,8 +234,7 @@ public class BasicController : MonoBehaviour
 
 			lastFrame = i;
 		}
-		if(mis+err>=20)
-		{
+		if(mis+err>=20)     //if our misses and errors total 20, force end the game
 			print ("Stopping forcefully!!");
 			rhythmTool.Stop ();
 			GameObject.Find("success").GetComponent<TextMesh> ().text = "";
@@ -227,7 +244,7 @@ public class BasicController : MonoBehaviour
 			GameObject.Find("labels").GetComponent<TextMesh>().text = "finish!\nplease\nwait...";
 			end = true;
 
-			GameObject[] remaining;
+			GameObject[] remaining;                                 //find and delete all remaining objects 
 			remaining = GameObject.FindGameObjectsWithTag("ball");
 			foreach (GameObject A in remaining)
 			{
@@ -239,7 +256,7 @@ public class BasicController : MonoBehaviour
 				Destroy(A);
 			}
 
-			foreach(spawn S in beltSpawners)
+			foreach(spawn S in beltSpawners)        //have the belts continue to move
 			{
 				S.doIt(0);
 				if(end)
@@ -261,6 +278,22 @@ public class BasicController : MonoBehaviour
 			
 		}
 	}
+
+    /*///////////
+     * 
+     *  check
+     *  
+     *  if a ball is hit, this checks if it was a successful hit.
+     *  if the ball's ID number is 0, it's a normal ball. 
+     *      if the ball's ID matches the ID in the nback list n ID's back, it's a success. play the hit sound and up the score
+     *      if not, it's an error. play the error sound and up the error count.
+     *  if the ball's ID number is 2, it's a bomb and is always a success. play the hit sound and up the score.
+     *  
+     *  
+     *  NOTE: before the buttons were used to start the game, a start ball was used. that's why the ID number is referred to here as notStart, since I 
+     *        since we wanted to make sure a ball being hit (which always calls this method) was not the start ball, hence notStart.
+     * 
+     */
 
 	public void check(int notStart)
 	{

@@ -1,5 +1,4 @@
-package GradeAnalyser;
-
+package programs.GradeAnalyser;
 
 public class TestDriver {
 	
@@ -278,7 +277,7 @@ public class TestDriver {
 			
 			System.out.println("average for question " + (i+1) + " (wafflehouse - serif): " + serifB.questionAverage(i));
 		}
-		System.out.println("\ntotal average wafflehouse - sans): " + sansA.totalAverage());
+		System.out.println("\ntotal average (wafflehouse - sans): " + sansA.totalAverage());
 		for(int i = 0; i < 4; i++){
 			
 			System.out.println("average for question " + (i+1) + " (wafflehouse - sans): " + sansA.questionAverage(i));

@@ -1,0 +1,13 @@
+Compile (in eclipse)
+---------------------
+export JAR file with quatrot as the main. as it has a console input read, it's not going to run in the editor.
+
+Run (in cmd)
+---------------------
+java -jar quaternionRotation.jar test.txt
+
+feel free to fill the test file in however you please, like the following format:
+
+x.x, y.y, z.z <----- point/quaternion vector to be rotated
+x.x, y.y, z.z <----- point/vector to be rotated around
+t.t  	      <----- angle to be rotated around

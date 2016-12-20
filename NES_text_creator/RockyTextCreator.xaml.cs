@@ -39,20 +39,20 @@ namespace RockyNESTextTool
 
     public partial class MainWindow : Window
     {
-        private String flname = "";
-        private txtData currentData = new txtData();
-        private int currentDataIndex = 0;
-        private ObservableCollection<txtData> currentFile = new ObservableCollection<txtData>();
+        private String flname = "";                         // file name of opened file
+        private txtData currentData = new txtData();        //current data being looked at
+        private int currentDataIndex = 0;                   //current index of data being looked at
+        private ObservableCollection<txtData> currentFile = new ObservableCollection<txtData>();        //current file open
         private String charTable = "0123456789abcdefghijklmnopqrstuvwxyz.?!,:'\"%~$-*"; // all acceptable characters
         private txtData dummyTxt = new txtData(); // creates dummy text to use as a buffer when starting/ deleting
         //conversion values
-        bool parseTest;
-        String output;
-        String tab;
-        char ptr;
-        int counter;
-        int chars;
-        int parse;
+        bool parseTest;         //bool to see if extra data parse is successful
+        String output;          //output string to export
+        String tab;             //string that precedes each line in the final out put, "    .db"                           
+        char ptr;               //current chr in the text data being parsed
+        int counter;            //current index in the text data being parsed
+        int chars;              //character count per output line
+        int parse;              //index of parsed int in the chartable- if it's -1, it's either a command or unrecognized.
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         public MainWindow()
         {
@@ -204,20 +204,38 @@ namespace RockyNESTextTool
                 MessageBox.Show("Rocky NES Text creator\nFor use with the Rocky NES text engine\nVersion 1.1\nCopyright 2016 John Welter\nContact: johnwelter@me.com", "Info");
             }
         }
+
+        /*////////////
+         * 
+         *  extraData
+         * 
+         *  reads values of additive codes. takes in three parameters:
+         *  
+         *  int amount - amount of digits to be read into each byte
+         *  int sections- how many times to read and write byte  
+         *  String input - the text being parsed 
+         *  
+         *  for each section, read an amount of digits to correspond to a number in base 10 (ie. 09 is 9, 026 is 26, etc)
+         *  store these in a temporary array of each section
+         *  convert each section in the array into a single byte and write it to the output
+         *  
+         *  if the extra parsed data has letters (aka incomplete additive code), throw an exception and abort export. 
+         *  
+         */
         private void extraData(int amount, int sections, String input)
         {
-            char code = input[counter];
-            String[] tempOut = new String[sections];
+            char code = input[counter];                 //get the letter of the current code
+            String[] tempOut = new String[sections];    //create an array to store each section
             for (int i = 0; i < sections; i++)
             {
                 for (int j = 0; j < amount; j++)
                 {
-                    counter++;
-                    tempOut[i] += input[counter];
-                    Regex regex = new Regex("[^0-9]+");
+                    counter++;                              //up the counter 
+                    tempOut[i] += input[counter];           //get the next digit of the code
+                    Regex regex = new Regex("[^0-9]+");     //check to see that digits only are being used
                     parseTest = regex.IsMatch(tempOut[i]);
 
-                    if (parseTest)
+                    if (parseTest)  //if there is an input mistake, throw an exception
                     {
                         throw new System.Exception("error in parsing for code: " + code + ". check to see if all additive codes have appropriate values.", null);
                     }
@@ -241,21 +259,32 @@ namespace RockyNESTextTool
             parse = 0;
             output += tab;
         }
+
+        /*/////////////
+         * 
+         *  convert
+         *  
+         *  
+         *  converts the text in each text data to labels and bytes for use with the Rocky NES Text Engine
+         *  INPUT - text of current text data to be converted
+         *   
+         *  converts a single text data to the format:
+         *  Label:
+         *  tab, ".db", hex data (up to 16 per line), break
+         *  IE
+         *  label:    Butts
+         *  text :    butts are cool, bruh dude
+         *   
+         *  Butts:
+         *    .db $0B, $1E, $1D, $1D, $1C, $FA, $0A, $1B, $0C, $18, $18, $15, $27, $FA, $0B, $1B
+         *    .db $1E, $11, $FA, $0D, $1E, $0D, $0E, $FF
+         * 
+         */
+
         private String convert(String input)
         {
             resetConvertValues();
-            // INPUT - text of current text data to be converted
-            //
-            //converts a single text data to the format:
-            //Label:
-            //tab, .db, hex data (up to 16 per line), break
-            //IE
-            //label:    Butts
-            //text :    butts are cool, bruh dude
-            //
-            //Butts:
-            //  .db $0B, $1E, $1D, $1D, $1C, $FA, $0A, $1B, $0C, $18, $18, $15, $27, $FA, $0B, $1B
-            //  .db $1E, $11, $FA, $0D, $1E, $0D, $0E, $FF
+            
             while (counter < input.Length)
             {
                 ptr = input[counter];   // gets character at the input
@@ -272,7 +301,7 @@ namespace RockyNESTextTool
                         extraData(3, 1, input);
                         Console.WriteLine("successfully parsed value.");
                     }
-                    catch (System.Exception parseException)
+                    catch (System.Exception parseException) //if an extra data parse was unsucccessful, abort the export.
                     {
                         throw new System.Exception(parseException.Message);
                     }
@@ -285,7 +314,7 @@ namespace RockyNESTextTool
                         extraData(3, 1, input);
                         Console.WriteLine("successfully parsed value.");
                     }
-                    catch (System.Exception parseException)
+                    catch (System.Exception parseException) //if an extra data parse was unsucccessful, abort the export.
                     {
                         throw new System.Exception(parseException.Message);
                     }

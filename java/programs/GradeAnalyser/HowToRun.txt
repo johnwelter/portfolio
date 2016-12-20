@@ -1,0 +1,9 @@
+Compile (in eclipse)
+---------------------
+export JAR file with TestDriver as the main. it can run as well in the editor.
+
+Run (in cmd)
+---------------------
+java -jar gradeAnalyser.jar 
+
+the program will spit out averages of test scores by scores of each test and scores of questions across all the tests. the numbers at the bottom represent (in columns) the averages of each test in each category. 

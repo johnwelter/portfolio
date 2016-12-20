@@ -1,17 +1,19 @@
-package rockyDataStructs;
+package dataStructs;
 
-public class RockyQuat {
+public class Quaternion {
 
 	
 	public double scale;
-	public RockyVector vector;
+	public Vector3D vector;	//Vector3D -> a vector of 3 values representing a point in 3D space. 
+							//includes functions to normalize, scale, get magnitude,
+							//and find the dot and cross products between other Vector3Ds.
 	
-	public RockyQuat()
+	public Quaternion()
 	{
 		scale = 0.0;
-		vector = new RockyVector();
+		vector = new Vector3D();
 	}
-	public RockyQuat(double s, RockyVector v)
+	public Quaternion(double s, Vector3D v)
 	{
 		scale = s;
 		vector = v;
@@ -31,25 +33,25 @@ public class RockyQuat {
 	 * @return 
 	 * RockyVector of new point location
 	 */
-	public RockyVector rotate(double angle, RockyVector u)
+	public Vector3D rotate(double angle, Vector3D u)
 	{
 		double theta = (angle*Math.PI)/180;
 		
 		double s = 0;
-		RockyVector v = new RockyVector ();
+		Vector3D v = new Vector3D ();
 		
-		RockyQuat qp = new RockyQuat();
-		RockyQuat q = new RockyQuat();
+		Quaternion qp = new Quaternion();
+		Quaternion q = new Quaternion();
 		
-		RockyQuat qqp = new RockyQuat();
-		RockyQuat qin = new RockyQuat();
+		Quaternion qqp = new Quaternion();
+		Quaternion qin = new Quaternion();
 		
-		RockyVector pp = new RockyVector();
+		Vector3D pp = new Vector3D();
 		
 		//initial quaternion setup
-		qp = new RockyQuat(scale, vector);
+		qp = new Quaternion(scale, vector);
 				
-		RockyVector uNormal = u.normalize();
+		Vector3D uNormal = u.normalize();
 				
 		System.out.println("uNormal = " + uNormal.toString() + "\n");
 				
@@ -58,14 +60,14 @@ public class RockyQuat {
 		v.y = Math.sin(theta/2) * uNormal.y;
 		v.z = Math.sin(theta/2) * uNormal.z;
 				
-		q = new RockyQuat(s, v);
+		q = new Quaternion(s, v);
 				
 		System.out.println("initial quaternions");
 		System.out.print("qp = " + qp.toString() + "\nq = " + q.toString() + "\n");
 		System.out.println("");
 				
 		//find cross product for quaternion math
-		RockyVector qqpcross = v.cross(vector);
+		Vector3D qqpcross = v.cross(vector);
 				
 		System.out.println("cross product of v and p, as well as the resulting quaternion");
 		System.out.println("qqpcross = " + qqpcross.toString());
@@ -79,10 +81,10 @@ public class RockyQuat {
 		System.out.println("qqp = " + qqp.toString());
 		System.out.println("");
 				
-		qin = new RockyQuat(q.scale, q.vector.scale(-1.0));
+		qin = new Quaternion(q.scale, q.vector.scale(-1.0));
 				
 		//find cross product for quaternion math
-		RockyVector ppcross = qqp.vector.cross(qin.vector);
+		Vector3D ppcross = qqp.vector.cross(qin.vector);
 				
 		System.out.println("cross product of qqp and qin, as well as the resulting point");
 		System.out.println("ppcross = " + ppcross.toString());

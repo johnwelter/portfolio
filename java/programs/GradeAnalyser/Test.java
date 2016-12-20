@@ -1,6 +1,15 @@
-package GradeAnalyser;
+package programs.GradeAnalyser;
 
-import javax.swing.Spring;
+/*
+
+	Test
+	
+	a test class
+	
+	contains the name of the taker, how many queations were on the test, and the total possible score
+
+*/
+
 
 public class Test {
 	

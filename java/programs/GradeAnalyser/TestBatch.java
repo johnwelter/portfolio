@@ -1,15 +1,24 @@
-package GradeAnalyser;
+package programs.GradeAnalyser;
 
 import java.util.ArrayList;
 
+/*
+
+	TestBatch
+	
+	a batch of tests
+	
+	can find the total average of all the tests, 
+	or the average of a single question across all tests (assuming the same amount of questions)
+
+*/
+
 public class TestBatch {
 	
-	private String name;
 	private ArrayList<Test> batch;
 	
 	public TestBatch(String name)
 	{
-		this.name = name;
 		batch = new ArrayList<Test>();
 	}
 	
@@ -18,6 +27,13 @@ public class TestBatch {
 		batch.add(add);
 	}
 	
+	/*
+	
+		totalAverage
+		
+		averages score of all tests, returns average
+	
+	*/
 	public double totalAverage()
 	{
 		
@@ -30,6 +46,16 @@ public class TestBatch {
 		
 		return totalScore/batch.size();
 	}
+	
+	/*
+	
+	
+		questionAverage
+		
+		input - index of question
+		
+		finds and returns average of a selected question across all tests in the batch
+	*/
 	
 	public double questionAverage(int index)
 	{
